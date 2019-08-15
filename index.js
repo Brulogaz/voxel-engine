@@ -637,8 +637,10 @@ Game.prototype.tick = function(delta) {
   
   tic.tick(delta)
 
-  this.emit('tick', delta)
-  
+    this.emit('tick', delta)
+    this.emit('lateTick', delta)
+    this.emit('uiTick', delta)
+
   if (!this.controls) return
   var playerPos = this.playerPosition()
   this.spatial.emit('position', playerPos, playerPos)
