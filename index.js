@@ -22,6 +22,7 @@ var kb = require('kb-controls')
 var physical = require('voxel-physical')
 var pin = require('pin-it')
 var tic = require('tic')()
+var ns = require("noisejs");
 
 module.exports = Game
 
@@ -30,7 +31,8 @@ function Game(opts) {
   var self = this
   if (!opts) opts = {}
   if (process.browser && this.notCapable(opts)) return
-  
+  this.noise = new ns.Noise(Math.random());
+
   // is this a client or a headless server
   this.isClient = Boolean( (typeof opts.isClient !== 'undefined') ? opts.isClient : process.browser )
 
@@ -564,11 +566,19 @@ Game.prototype.showChunk = function(chunk) {
   }
   this.voxels.meshes[chunkIndex] = mesh
   if (this.isClient) {
+
     if (this.meshType === 'wireMesh') mesh.createWireMesh()
     else mesh.createSurfaceMesh(this.materials.material)
-    this.materials.paint(mesh)
+
+    mesh.setPosition(bounds[0][0], bounds[0][1], bounds[0][2])
+
+    this.materials.paint(mesh,[bounds[0][0], bounds[0][1], bounds[0][2]])
+
   }
-  mesh.setPosition(bounds[0][0], bounds[0][1], bounds[0][2])
+  else
+  {
+    mesh.setPosition(bounds[0][0], bounds[0][1], bounds[0][2])
+  }
   mesh.addToScene(this.scene)
   this.emit('renderChunk', chunk)
   return mesh
