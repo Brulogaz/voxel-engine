@@ -67,7 +67,7 @@ function Game(opts) {
     skyColor: this.skyColor,
     antialias: this.antialias
   })
-  this.view.bindToScene(this.scene)
+  this.view.bindToScene(this.scene,true)
   this.camera = this.view.getCamera()
   if (!opts.lightsDisabled) this.addLights(this.scene)
 
@@ -179,7 +179,9 @@ Game.prototype.addItem = function(item) {
   }
 
   this.items.push(item)
-  if (item.mesh) this.scene.add(item.mesh)
+  if (item.mesh) {
+    this.scene.add(item.mesh)
+  }
   return this.items[this.items.length - 1]
 }
 
